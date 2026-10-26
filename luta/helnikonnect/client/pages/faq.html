@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — HelpKonnect</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="toast-wrap" id="toast-wrap"></div>
+    <header class="site-nav"><div class="container nav-inner">
+        <a href="../index.html" class="brand" data-route="home"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0ea5e9"/><path d="M10 12h3v13h-3zM19 12h3v13h-3zM7 9h4v16H7zM21 9h4v16h-4z" fill="#0b2a4a"/></svg>HelpKonnect</a>
+        <nav class="nav-links"><a href="../index.html" data-route="home" data-i18n="home">Home</a><a href="../index.html#services" data-route="services" data-i18n="services">Services</a><a href="documents.html" data-route="docs" data-i18n="docs_library">Documents</a><a href="faq.html" data-route="faq" class="active" data-i18n="faq">FAQ</a><a href="../index.html#contact" data-route="contact" data-i18n="contact">Contact</a></nav>
+        <div class="nav-actions">
+            <div class="lang-switch"><button data-lang-btn="en">EN</button><button data-lang-btn="sw">SW</button></div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+        </div>
+    </div></header>
+
+    <main class="section">
+        <div class="container" style="max-width:820px">
+            <div class="section-head">
+                <span class="tagline" data-i18n="faq">FAQ</span>
+                <h1>Frequently Asked Questions</h1>
+                <div class="search-wrap" style="margin-top:16px"><input id="faq-search" type="search" data-i18n-placeholder="search" placeholder="Search questions..." aria-label="Search FAQ"></div>
+            </div>
+            <div class="faq-list" id="faq-list" style="display:flex;flex-direction:column;gap:12px"></div>
+        </div>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script>
+        const API = window.HNC, L = window.HNC_LANG;
+        const list = document.getElementById('faq-list');
+        list.innerHTML = Array.from({length:3}).map(()=>'<div class="skeleton-card"><div class="skeleton skeleton-line" style="width:80%"></div><div class="skeleton skeleton-line"></div></div>').join('');
+        async function load(search){
+            const q = { limit: 100 };
+            if (search) q.search = search;
+            const res = await API.request('faqs', {auth:false, query:q}).catch(()=>({data:[]}));
+            const items = res.data || [];
+            list.innerHTML = items.length ? items.map((f,i)=>`
+                <div class="faq-item accordion">
+                    <button class="accordion-head" aria-expanded="false"><span>${String(f.question).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}</span><span class="accordion-icon">+</span></button>
+                    <div class="accordion-body" hidden><p>${f.answer}</p></div>
+                </div>`).join('') : '<div class="empty-state"><p>No results found.</p></div>';
+            list.querySelectorAll('.accordion-head').forEach(btn=>btn.addEventListener('click',()=>{const o=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!o));btn.nextElementSibling.hidden=o;}));
+        }
+        load();
+        const input = document.getElementById('faq-search'); let timer;
+        input.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(()=>load(input.value.trim()),300);});
+        document.querySelectorAll('[data-lang-btn]').forEach(b=>b.addEventListener('click',()=>L.setLang(b.getAttribute('data-lang-btn'))));
+        document.getElementById('nav-toggle').addEventListener('click',()=>document.querySelector('.nav-links').classList.toggle('open'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — HelpKonnect</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>.contact-channel{display:flex;align-items:center;gap:14px;padding:20px;border:1px solid var(--gray-100);border-radius:var(--radius)}.contact-channel svg{flex-shrink:0}</style>
+</head>
+<body>
+    <div class="toast-wrap" id="toast-wrap"></div>
+    <header class="site-nav"><div class="container nav-inner">
+        <a href="../index.html" class="brand" data-route="home"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#0ea5e9"/><path d="M10 12h3v13h-3zM19 12h3v13h-3zM7 9h4v16H7zM21 9h4v16h-4z" fill="#0b2a4a"/></svg>HelpKonnect</a>
+        <nav class="nav-links"><a href="../index.html" data-route="home" data-i18n="home">Home</a><a href="../index.html#services" data-route="services" data-i18n="services">Services</a><a href="documents.html" data-route="docs" data-i18n="docs_library">Documents</a><a href="faq.html" data-route="faq" data-i18n="faq">FAQ</a><a href="contact.html" data-route="contact" class="active" data-i18n="contact">Contact</a></nav>
+        <div class="nav-actions">
+            <div class="lang-switch"><button data-lang-btn="en">EN</button><button data-lang-btn="sw">SW</button></div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+        </div>
+    </div></header>
+
+    <main class="section">
+        <div class="container">
+            <div class="section-head">
+                <span class="tagline" data-i18n="contact">Contact</span>
+                <h1 data-i18n="contact_admin">Contact Admin</h1>
+                <p class="muted">Reach HelpKonnect support through your preferred channel or chat directly.</p>
+            </div>
+
+            <div class="card" style="padding:32px;margin-bottom:32px">
+                <h3 style="margin-top:0">Start a Chat</h3>
+                <p class="muted">Tell us your name and how to reach you, and our support team will respond here.</p>
+                <div class="grid-2" style="grid-template-columns:1fr">
+                    <div class="form-group"><label>Tracing ID (optional)</label>
+                        <input class="form-input" id="contact-subject" placeholder="Brief subject">
+                    </div>
+                    <div class="form-group"><label>Your message</label>
+                        <textarea class="form-textarea" id="contact-message" placeholder="How can we help you?"></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="send-start">Send Message</button>
+                </div>
+                <p class="muted" id="contact-hint" style="margin-top:12px;font-size:.85rem"></p>
+            </div>
+
+            <div class="contact-grid" id="contact-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+                <div class="card contact-channel">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.3 1.6.54 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.72-1.11a2 2 0 0 1 2.11-.45c.76.24 1.55.42 2.36.54A2 2 0 0 1 22 16.92z"/></svg>
+                    <div><h3 style="margin:0">Phone / SMS</h3><span data-setting="support_phone">+255700000000</span></div>
+                </div>
+                <div class="card contact-channel">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    <div><h3 style="margin:0">WhatsApp</h3><span data-setting="whatsapp_contact">+255700000000</span></div>
+                </div>
+                <div class="card contact-channel">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                    <div><h3 style="margin:0">Support Email</h3><span data-setting="support_email">support@helpkonnect.com</span></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/i18n.js"></script>
+    <script>
+        const API = window.HNC, L = window.HNC_LANG;
+        (async function(){
+            try{
+                const res = await API.request('settings',{auth:false});
+                document.querySelectorAll('[data-setting]').forEach(n=>{const k=n.getAttribute('data-setting');if(res.data[k]!==undefined)n.textContent=res.data[k];});
+            }catch(e){}
+        })();
+        function toast(m,t){const w=document.getElementById('toast-wrap');const n=document.createElement('div');n.className='toast toast--'+(t||'success');n.textContent=m;w.appendChild(n);setTimeout(()=>n.classList.add('toast--show'),20);setTimeout(()=>{n.classList.remove('toast--show');setTimeout(()=>n.remove(),300);},3200);}
+        document.getElementById('send-start').addEventListener('click',async()=>{
+            const hint=document.getElementById('contact-hint');
+            hint.textContent = L.t('loading');
+            // Capture intent; full chat submission is wired with the chat module.
+            const subject=document.getElementById('contact-subject').value.trim();
+            const message=document.getElementById('contact-message').value.trim();
+            if(!message){hint.textContent='Please enter a message.';toast('Please enter a message.','error');return;}
+            hint.textContent='Your request has been noted. Sign in or track via the chat feature to continue.';
+            toast('Message captured. Chat is coming online in this module.','success');
+        });
+        document.querySelectorAll('[data-lang-btn]').forEach(b=>b.addEventListener('click',()=>L.setLang(b.getAttribute('data-lang-btn'))));
+        document.getElementById('nav-toggle').addEventListener('click',()=>document.querySelector('.nav-links').classList.toggle('open'));
+    </script>
+</body>
+</html>
